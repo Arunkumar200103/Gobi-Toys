@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, use } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Navbar } from '@/components/navbar'
@@ -120,8 +120,10 @@ const relatedProducts = [
   },
 ]
 
-export default function ProductPage({ params }: { params: { id: string } }) {
-  const product = productDetails[params.id] || productDetails['1']
+export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
+  // `params` is a promise in client components, so unwrap it with React.use
+  const { id } = use(params)
+  const product = productDetails[id] || productDetails['1']
   const [quantity, setQuantity] = useState(1)
   const [isWishlisted, setIsWishlisted] = useState(false)
 
