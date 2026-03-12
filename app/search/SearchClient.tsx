@@ -1,11 +1,11 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { ProductCard } from '@/components/product-card'
 import { Search as SearchIcon } from 'lucide-react'
-
 const allProducts = [
   {
     id: '1',
@@ -117,80 +117,147 @@ const allProducts = [
   },
 ]
 
-export default function SearchClient() {
+export default function SearchPage() {
+
+  const router = useRouter()
   const searchParams = useSearchParams()
+
   const query = searchParams.get('q') || ''
 
+  const [search, setSearch] = useState(query)
+
+  useEffect(() => {
+    setSearch(query)
+  }, [query])
+
+  const handleSearch = (e:any) => {
+    e.preventDefault()
+
+    if (!search.trim()) return
+
+    router.push(`/search?q=${search}`)
+  }
+
   const searchResults = allProducts.filter((product) => {
-    const searchTerm = query.toLowerCase()
+    const term = query.toLowerCase()
+
     return (
-      product.name.toLowerCase().includes(searchTerm) ||
-      product.category.toLowerCase().includes(searchTerm)
+      product.name.toLowerCase().includes(term) ||
+      product.category.toLowerCase().includes(term)
     )
   })
 
   return (
     <div className="min-h-screen bg-background">
+
       <Navbar />
 
       {/* Header */}
-      <section className="py-12 bg-secondary border-b border-border">
+      <section className="py-8 sm:py-12 bg-secondary border-b border-border">
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-2">
-            <SearchIcon size={32} className="text-primary" />
-            <h1 className="text-4xl font-bold text-secondary-foreground">
-              Search Results
+
+          <div className="flex items-center gap-3 mb-6">
+            <SearchIcon className="text-primary" size={28} />
+            <h1 className="text-2xl sm:text-4xl font-bold">
+              Search Products
             </h1>
           </div>
 
-          <p className="text-secondary-foreground/60">
-            {query && (
-              <>
-                Found <span className="font-semibold">{searchResults.length}</span>{" "}
-                result{searchResults.length !== 1 ? "s" : ""} for "{query}"
-              </>
-            )}
-            {!query && "Enter a search term to find products"}
-          </p>
+          {/* Search Input */}
+          <form
+            onSubmit={handleSearch}
+            className="flex flex-col sm:flex-row gap-3 max-w-xl"
+          >
+
+            <input
+              type="text"
+              placeholder="Search toys, blocks, puzzles..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full flex-1 px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+
+            <button
+              type="submit"
+              className="w-full sm:w-auto px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-accent transition"
+            >
+              Search
+            </button>
+
+          </form>
+
+          {query && (
+            <p className="mt-4 text-sm text-muted-foreground">
+              Found {searchResults.length} result{searchResults.length !== 1 ? "s" : ""} for "{query}"
+            </p>
+          )}
+
         </div>
+
       </section>
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Results */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
         {query ? (
-          <>
-            {searchResults.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {searchResults.map((product) => (
-                  <ProductCard key={product.id} {...product} />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-20">
-                <SearchIcon
-                  size={64}
-                  className="mx-auto mb-4 text-muted-foreground opacity-30"
-                />
-                <h2 className="text-2xl font-semibold text-foreground mb-2">
-                  No Products Found
-                </h2>
-              </div>
-            )}
-          </>
+
+          searchResults.length > 0 ? (
+
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {searchResults.map((product) => (
+                <ProductCard key={product.id} {...product} />
+              ))}
+            </div>
+
+            
+
+          ) : (
+
+            <div className="text-center py-20">
+
+              <SearchIcon
+                size={64}
+                className="mx-auto mb-4 text-muted-foreground opacity-30"
+              />
+
+              <h2 className="text-xl sm:text-2xl font-semibold">
+                No Products Found
+              </h2>
+
+              <p className="text-muted-foreground">
+                Try searching with another keyword
+              </p>
+
+            </div>
+
+          )
+
         ) : (
+
           <div className="text-center py-20">
+
             <SearchIcon
               size={64}
               className="mx-auto mb-4 text-muted-foreground opacity-30"
             />
-            <h2 className="text-2xl font-semibold text-foreground mb-2">
+
+            <h2 className="text-xl sm:text-2xl font-semibold">
               Start Searching
             </h2>
+
+            <p className="text-muted-foreground">
+              Type something in the search box above
+            </p>
+
           </div>
+
         )}
-      </div>
+
+      </section>
 
       <Footer />
+
     </div>
   )
 }

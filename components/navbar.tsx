@@ -141,9 +141,11 @@ export function Navbar() {
 
           {/* Right Side Icons */}
           <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-muted rounded-lg transition-colors duration-300 hover:scale-110 transform">
-              <Search size={20} className="text-foreground" />
-            </button>
+            <Link href="/search">
+              <button className="p-2 hover:bg-muted rounded-lg transition-colors duration-300 hover:scale-110 transform">
+                <Search size={20} className="text-foreground" />
+              </button>
+            </Link>
             <Link href="/wishlist">
               <button className="p-2 hover:bg-muted rounded-lg transition-colors duration-300 relative hover:scale-110 transform">
                 <Heart size={20} className="text-foreground" />

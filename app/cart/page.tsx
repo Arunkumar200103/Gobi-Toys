@@ -50,54 +50,60 @@ export default function CartPage() {
               {cartItems.length > 0 ? (
                 <div className="space-y-4">
                   {cartItems.map((item) => (
-                    <div key={item.id} className="bg-card border border-border rounded-lg p-6 flex gap-6">
-                      {/* Product Image */}
-                      <div className="w-24 h-24 bg-secondary rounded-lg flex-shrink-0 flex items-center justify-center">
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          width={96}
-                          height={96}
-                          className="w-full h-full object-cover rounded"
-                        />
-                      </div>
+                   <div
+  key={item.id}
+  className="bg-card border border-border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6"
+>
+  {/* Product Image */}
+  <div className="w-20 h-20 sm:w-24 sm:h-24 bg-secondary rounded-lg flex-shrink-0 flex items-center justify-center">
+    <Image
+      src={item.image}
+      alt={item.name}
+      width={96}
+      height={96}
+      className="w-full h-full object-cover rounded"
+    />
+  </div>
 
-                      {/* Product Info */}
-                      <div className="flex-1">
-                        <Link href={`/products/${item.id}`}>
-                          <h3 className="text-lg font-semibold text-foreground hover:text-primary transition mb-2">
-                            {item.name}
-                          </h3>
-                        </Link>
-                        <p className="text-2xl font-bold text-primary mb-4">
-                          ₹{item.price.toLocaleString()}
-                        </p>
+  {/* Product Info */}
+  <div className="flex-1">
+    <Link href={`/products/${item.id}`}>
+      <h3 className="text-base sm:text-lg font-semibold text-foreground hover:text-primary transition mb-1">
+        {item.name}
+      </h3>
+    </Link>
 
-                        {/* Quantity Controls */}
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center border border-border rounded-lg">
-                            <button className="px-3 py-1 text-foreground hover:bg-muted transition">
-                              <Minus size={16} />
-                            </button>
-                            <span className="px-4 py-1 font-semibold text-foreground">
-                              {item.quantity}
-                            </span>
-                            <button className="px-3 py-1 text-foreground hover:bg-muted transition">
-                              <Plus size={16} />
-                            </button>
-                          </div>
-                          <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition">
-                            <Trash2 size={20} />
-                          </button>
-                        </div>
-                      </div>
+    <p className="text-lg sm:text-2xl font-bold text-primary mb-3">
+      ₹{item.price.toLocaleString()}
+    </p>
 
-                      {/* Line Total */}
-                      <div className="text-right">
-                        <p className="text-sm text-muted-foreground mb-2">Line Total</p>
-                        <p className="text-2xl font-bold text-foreground">
-                          ₹{(item.price * item.quantity).toLocaleString()}
-                        </p>
+    {/* Quantity Controls */}
+    <div className="flex items-center justify-between sm:justify-start gap-4">
+      <div className="flex items-center border border-border rounded-lg">
+        <button className="px-3 py-1 hover:bg-muted">
+          <Minus size={16} />
+        </button>
+
+        <span className="px-4 py-1 font-semibold">{item.quantity}</span>
+
+        <button className="px-3 py-1 hover:bg-muted">
+          <Plus size={16} />
+        </button>
+      </div>
+
+      <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg">
+        <Trash2 size={18} />
+      </button>
+    </div>
+  </div>
+
+  {/* Line Total */}
+  <div className="sm:text-right border-t sm:border-none pt-3 sm:pt-0">
+    <p className="text-sm text-muted-foreground">Line Total</p>
+    <p className="text-xl sm:text-2xl font-bold">
+      ₹{(item.price * item.quantity).toLocaleString()}
+    </p>
+
                       </div>
                     </div>
                   ))}
