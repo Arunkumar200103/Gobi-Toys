@@ -190,23 +190,37 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Newsletter */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
-          <p className="text-lg mb-8 opacity-90">Get exclusive offers and new product launches delivered to your inbox</p>
-          <form className="flex gap-2">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-3 rounded-lg bg-primary-foreground text-foreground placeholder:text-muted-foreground focus:outline-none"
-            />
-            <button type="submit" className="px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:opacity-90 transition">
-              Subscribe
-            </button>
-          </form>
-        </div>
-      </section>
+    {/* Newsletter */}
+<section className="py-16 bg-primary text-primary-foreground">
+  <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    
+    <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+      Stay Updated
+    </h2>
+
+    <p className="text-base sm:text-lg mb-8 opacity-90">
+      Get exclusive offers and new product launches delivered to your inbox
+    </p>
+
+    <form className="flex flex-col sm:flex-row gap-3">
+      
+      <input
+        type="email"
+        placeholder="Enter your email"
+        className="w-full flex-1 px-4 py-3 rounded-lg bg-primary-foreground text-foreground placeholder:text-muted-foreground focus:outline-none"
+      />
+
+      <button
+        type="submit"
+        className="w-full sm:w-auto px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:opacity-90 transition"
+      >
+        Subscribe
+      </button>
+
+    </form>
+
+  </div>
+</section>
 
       <Footer />
     </div>
