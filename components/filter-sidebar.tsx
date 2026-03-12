@@ -7,8 +7,6 @@ import { ChevronDown, X } from 'lucide-react'
 interface FilterSidebarProps {
   selectedAge?: string
   selectedCategory?: string
-  minPrice?: number
-  maxPrice?: number
   onClose?: () => void
 }
 
@@ -25,13 +23,14 @@ const ageRanges = [
   { label: '30+ Months', value: '30' },
 ]
 
+
 const categories = [
-  { label: 'Toys', value: 'toys' },
-  { label: 'Wooden Puzzles', value: 'puzzles' },
-  { label: 'Developmental Aids', value: 'developmental' },
-  { label: 'Montessori Furniture', value: 'furniture' },
-  { label: 'Kids Utensils', value: 'utensils' },
-  { label: 'Montessori Kits', value: 'kits' },
+  { label: 'Stacking Toys', value: 'toys', count: 12 },
+  { label: 'Wooden Puzzles', value: 'puzzles', count: 8 },
+  { label: 'Developmental Aids', value: 'developmental', count: 15 },
+  { label: 'Montessori Furniture', value: 'furniture', count: 6 },
+  { label: 'Kids Utensils', value: 'utensils', count: 5 },
+  { label: 'Montessori Kits', value: 'kits', count: 10 },
 ]
 
 const priceRanges = [
@@ -45,8 +44,6 @@ const priceRanges = [
 export function FilterSidebar({
   selectedAge,
   selectedCategory,
-  minPrice,
-  maxPrice,
   onClose,
 }: FilterSidebarProps) {
   const [expandedSections, setExpandedSections] = useState({
@@ -72,7 +69,8 @@ export function FilterSidebar({
 
   return (
     <div className="w-full md:w-64 bg-card border border-border rounded-lg p-6 space-y-6">
-      {/* Header */}
+
+      {/* Mobile Header */}
       <div className="flex items-center justify-between md:hidden">
         <h2 className="text-lg font-bold text-foreground">Filters</h2>
         <button onClick={onClose} className="p-1 hover:bg-muted rounded">
@@ -89,21 +87,33 @@ export function FilterSidebar({
           <span>By Age</span>
           <ChevronDown
             size={18}
-            className={`transition-transform ${expandedSections.age ? 'rotate-180' : ''}`}
+            className={`transition-transform duration-200 ${expandedSections.age ? 'rotate-180' : ''}`}
           />
         </button>
         {expandedSections.age && (
-          <div className="space-y-2 pl-2">
+          <div className="space-y-1 pl-2">
             {ageRanges.map((range) => (
-              <Link key={range.value} href={buildFilterUrl(range.value, selectedCategory)}>
-                <label className="flex items-center gap-3 cursor-pointer group">
+              <Link
+                key={range.value}
+                href={buildFilterUrl(
+                  selectedAge === range.value ? undefined : range.value, // ✅ toggle off if already selected
+                  selectedCategory
+                )}
+              >
+                <label className="flex items-center gap-3 cursor-pointer group py-1">
                   <input
                     type="checkbox"
                     checked={selectedAge === range.value}
                     readOnly
-                    className="w-4 h-4 rounded border-border cursor-pointer"
+                    className="w-4 h-4 rounded border-border cursor-pointer accent-primary"
                   />
-                  <span className="text-sm text-foreground group-hover:text-primary transition">
+                  <span
+                    className={`text-sm transition ${
+                      selectedAge === range.value
+                        ? 'text-primary font-medium'
+                        : 'text-foreground group-hover:text-primary'
+                    }`}
+                  >
                     {range.label}
                   </span>
                 </label>
@@ -113,7 +123,7 @@ export function FilterSidebar({
         )}
       </div>
 
-      {/* Category Filter */}
+      {/* Category Filter — with counts */}
       <div className="space-y-3 border-t border-border pt-6">
         <button
           onClick={() => toggleSection('category')}
@@ -122,22 +132,44 @@ export function FilterSidebar({
           <span>Category</span>
           <ChevronDown
             size={18}
-            className={`transition-transform ${expandedSections.category ? 'rotate-180' : ''}`}
+            className={`transition-transform duration-200 ${expandedSections.category ? 'rotate-180' : ''}`}
           />
         </button>
         {expandedSections.category && (
-          <div className="space-y-2 pl-2">
+          <div className="space-y-1 pl-2">
             {categories.map((cat) => (
-              <Link key={cat.value} href={buildFilterUrl(selectedAge, cat.value)}>
-                <label className="flex items-center gap-3 cursor-pointer group">
+              <Link
+                key={cat.value}
+                href={buildFilterUrl(
+                  selectedAge,
+                  selectedCategory === cat.value ? undefined : cat.value // ✅ toggle off if already selected
+                )}
+              >
+                <label className="flex items-center gap-3 cursor-pointer group py-1">
                   <input
                     type="checkbox"
                     checked={selectedCategory === cat.value}
                     readOnly
-                    className="w-4 h-4 rounded border-border cursor-pointer"
+                    className="w-4 h-4 rounded border-border cursor-pointer accent-primary"
                   />
-                  <span className="text-sm text-foreground group-hover:text-primary transition">
+                  <span
+                    className={`text-sm flex-1 transition ${
+                      selectedCategory === cat.value
+                        ? 'text-primary font-medium'
+                        : 'text-foreground group-hover:text-primary'
+                    }`}
+                  >
                     {cat.label}
+                  </span>
+                  {/* ✅ Count badge shown inline */}
+                  <span
+                    className={`text-xs rounded-full px-2 py-0.5 transition ${
+                      selectedCategory === cat.value
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-secondary text-muted-foreground'
+                    }`}
+                  >
+                    {cat.count}
                   </span>
                 </label>
               </Link>
@@ -155,18 +187,21 @@ export function FilterSidebar({
           <span>Price</span>
           <ChevronDown
             size={18}
-            className={`transition-transform ${expandedSections.price ? 'rotate-180' : ''}`}
+            className={`transition-transform duration-200 ${expandedSections.price ? 'rotate-180' : ''}`}
           />
         </button>
         {expandedSections.price && (
-          <div className="space-y-2 pl-2">
+          <div className="space-y-1 pl-2">
             {priceRanges.map((range) => (
-              <Link key={range.value} href={buildFilterUrl(selectedAge, selectedCategory, range.value)}>
-                <label className="flex items-center gap-3 cursor-pointer group">
+              <Link
+                key={range.value}
+                href={buildFilterUrl(selectedAge, selectedCategory, range.value)}
+              >
+                <label className="flex items-center gap-3 cursor-pointer group py-1">
                   <input
                     type="checkbox"
                     readOnly
-                    className="w-4 h-4 rounded border-border cursor-pointer"
+                    className="w-4 h-4 rounded border-border cursor-pointer accent-primary"
                   />
                   <span className="text-sm text-foreground group-hover:text-primary transition">
                     {range.label}

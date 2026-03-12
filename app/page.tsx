@@ -2,21 +2,21 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { TrustBadges } from '@/components/trust-badges'
 import { ProductCard } from '@/components/product-card'
-import { ArrowRight, Heart } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
-// Sample product data
 const featuredProducts = [
   {
     id: '1',
     name: 'Wooden Stacking Rings',
     price: 599,
     image: '/products/rings.jpg',
-    category: 'Stacking Toys',
+    category: 'toys',
     rating: 5,
     reviews: 24,
   },
@@ -25,7 +25,7 @@ const featuredProducts = [
     name: 'Montessori Wooden Blocks',
     price: 899,
     image: '/products/blocks.jpg',
-    category: 'Building Toys',
+    category: 'puzzles',
     rating: 4.5,
     reviews: 18,
   },
@@ -34,7 +34,7 @@ const featuredProducts = [
     name: 'Beaded Counting Frame',
     price: 799,
     image: '/products/beads.jpg',
-    category: 'Learning Toys',
+    category: 'developmental',
     rating: 5,
     reviews: 32,
   },
@@ -43,17 +43,17 @@ const featuredProducts = [
     name: 'Wooden Shape Sorter',
     price: 649,
     image: '/products/sorter.jpg',
-    category: 'Educational',
+    category: 'toys',
     rating: 4,
     reviews: 15,
   },
 ]
 
 const categories = [
-  { name: 'Stacking Toys', count: 12 },
-  { name: 'Building Sets', count: 8 },
-  { name: 'Learning Toys', count: 15 },
-  { name: 'Sensory Toys', count: 10 },
+  { name: 'Stacking Toys', value: 'toys', count: 12 },
+  { name: 'Building Sets', value: 'puzzles', count: 8 },
+  { name: 'Learning Toys', value: 'developmental', count: 15 },
+  { name: 'Sensory Toys', value: 'kits', count: 10 },
 ]
 
 const testimonials = [
@@ -75,6 +75,14 @@ const testimonials = [
 ]
 
 export default function Home() {
+  const [email, setEmail] = useState('')
+
+  const handleSubscribe = () => {
+    if (!email) return
+    console.log('Subscribed:', email)
+    setEmail('')
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -83,7 +91,6 @@ export default function Home() {
       <section className="relative py-20 bg-secondary overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            {/* Content */}
             <div className="z-10">
               <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
                 Premium Wooden Toys for Your Little One
@@ -106,7 +113,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Hero Image */}
             <div className="relative h-96 md:h-full">
               <Image
                 src="/hero.jpg"
@@ -132,7 +138,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {categories.map((cat, i) => (
-              <Link key={i} href={`/shop?category=${cat.name}`}>
+              <Link key={i} href={`/shop?category=${cat.value}`}>
                 <div className="p-8 bg-card rounded-lg border border-border hover:border-primary hover:shadow-lg transition-all cursor-pointer group">
                   <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition mb-2">
                     {cat.name}
@@ -190,37 +196,30 @@ export default function Home() {
         </div>
       </section>
 
-    {/* Newsletter */}
-<section className="py-16 bg-primary text-primary-foreground">
-  <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    
-    <h2 className="text-2xl sm:text-3xl font-bold mb-4">
-      Stay Updated
-    </h2>
-
-    <p className="text-base sm:text-lg mb-8 opacity-90">
-      Get exclusive offers and new product launches delivered to your inbox
-    </p>
-
-    <form className="flex flex-col sm:flex-row gap-3">
-      
-      <input
-        type="email"
-        placeholder="Enter your email"
-        className="w-full flex-1 px-4 py-3 rounded-lg bg-primary-foreground text-foreground placeholder:text-muted-foreground focus:outline-none"
-      />
-
-      <button
-        type="submit"
-        className="w-full sm:w-auto px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:opacity-90 transition"
-      >
-        Subscribe
-      </button>
-
-    </form>
-
-  </div>
-</section>
+      {/* Newsletter */}
+      <section className="py-16 bg-primary text-primary-foreground">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Stay Updated</h2>
+          <p className="text-base sm:text-lg mb-8 opacity-90">
+            Get exclusive offers and new product launches delivered to your inbox
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="w-full flex-1 px-4 py-3 rounded-lg bg-primary-foreground text-foreground placeholder:text-muted-foreground focus:outline-none"
+            />
+            <button
+              onClick={handleSubscribe}
+              className="w-full sm:w-auto px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:opacity-90 transition"
+            >
+              Subscribe
+            </button>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>
