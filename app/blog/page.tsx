@@ -1,8 +1,11 @@
+"use client"
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { Calendar, User, ArrowRight } from 'lucide-react'
+import { useState} from 'react'
 
 interface BlogPost {
   id: string
@@ -87,6 +90,11 @@ const blogPosts: BlogPost[] = [
 export default function BlogPage() {
   const featuredPost = blogPosts[0]
   const recentPosts = blogPosts.slice(1)
+  const [email, setEmail] = useState('')
+
+  const handleSubscribe = () => {
+    if (!email) return
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -187,23 +195,28 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* Newsletter Signup */}
+      {/* Newsletter */}
       <section className="py-16 bg-primary text-primary-foreground">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Subscribe to Our Blog</h2>
-          <p className="text-lg mb-8 opacity-90">
-            Get the latest articles about child development and exclusive offers delivered to your inbox.
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Subscribe to Our Blog</h2>
+          <p className="text-base sm:text-lg mb-8 opacity-90">
+           get the latest insights, tips, and updates on child development and play delivered straight to your inbox.
           </p>
-          <form className="flex gap-2 max-w-md mx-auto">
+          <div className="flex flex-col sm:flex-row gap-3">
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="flex-1 px-4 py-3 rounded-lg bg-primary-foreground text-foreground placeholder:text-muted-foreground focus:outline-none"
+              className="w-full flex-1 px-4 py-3 rounded-lg bg-primary-foreground text-foreground placeholder:text-muted-foreground focus:outline-none"
             />
-            <button type="submit" className="px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:opacity-90 transition">
+            <button
+              onClick={handleSubscribe}
+              className="w-full sm:w-auto px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:opacity-90 transition"
+            >
               Subscribe
             </button>
-          </form>
+          </div>
         </div>
       </section>
 
