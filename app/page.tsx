@@ -8,7 +8,7 @@ import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { TrustBadges } from '@/components/trust-badges'
 import { ProductCard } from '@/components/product-card'
-import { ArrowRight, icons ,Layers, Blocks, GraduationCap, Sparkles } from "lucide-react";
+import { ArrowRight, icons ,Layers, Blocks, GraduationCap, Sparkles, Utensils } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 const featuredProducts = [
@@ -55,6 +55,8 @@ const categoryIcons: Record<string, LucideIcon> = {
   puzzles: Blocks,
   developmental: GraduationCap,
   kits: Sparkles,
+  furniture: icons['Table'],
+  utensils: Utensils,
 };
 
 const categories = [
@@ -62,6 +64,8 @@ const categories = [
   { name: "Building Sets", value: "puzzles", count: 8 },
   { name: "Learning Toys", value: "developmental", count: 15 },
   { name: "Sensory Toys", value: "kits", count: 10 },
+  { name: "Montessori Furniture", value: "furniture", count: 5 },
+  { name: "Kids Utensils", value: "utensils", count: 7 }
 ];
 
 const testimonials = [
