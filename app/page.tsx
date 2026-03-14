@@ -8,7 +8,8 @@ import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { TrustBadges } from '@/components/trust-badges'
 import { ProductCard } from '@/components/product-card'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, icons ,Layers, Blocks, GraduationCap, Sparkles } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 const featuredProducts = [
   {
@@ -49,12 +50,19 @@ const featuredProducts = [
   },
 ]
 
+const categoryIcons: Record<string, LucideIcon> = {
+  toys: Layers,
+  puzzles: Blocks,
+  developmental: GraduationCap,
+  kits: Sparkles,
+};
+
 const categories = [
-  { name: 'Stacking Toys', value: 'toys', count: 12 },
-  { name: 'Building Sets', value: 'puzzles', count: 8 },
-  { name: 'Learning Toys', value: 'developmental', count: 15 },
-  { name: 'Sensory Toys', value: 'kits', count: 10 },
-]
+  { name: "Stacking Toys", value: "toys", count: 12 },
+  { name: "Building Sets", value: "puzzles", count: 8 },
+  { name: "Learning Toys", value: "developmental", count: 15 },
+  { name: "Sensory Toys", value: "kits", count: 10 },
+];
 
 const testimonials = [
   {
@@ -74,7 +82,22 @@ const testimonials = [
   },
 ]
 
-export default function Home() {
+function CategorySkeleton() {
+  return (
+    <div className="p-6 bg-card rounded-xl border border-border animate-pulse shrink-0
+      w-16 md:w-auto">
+      <div className="w-10 h-10 rounded-lg bg-muted md:mb-4" />
+      <div className="hidden md:block h-4 bg-muted rounded w-3/4 mb-3" />
+      <div className="hidden md:block h-3 bg-muted rounded w-1/3" />
+    </div>
+  );
+}
+
+
+interface CategoriesSectionProps {
+  loading?: boolean;
+}
+export default function Home({ loading = false }: CategoriesSectionProps) {
   const [email, setEmail] = useState('')
 
   const handleSubscribe = () => {
@@ -88,7 +111,7 @@ export default function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative py-20 bg-secondary overflow-hidden">
+      <section className="relative py-20 bg-secondary overflow-hidden mt-[-45px]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="z-10">
@@ -129,27 +152,62 @@ export default function Home() {
       {/* Trust Badges */}
       <TrustBadges />
 
-      {/* Categories Section */}
-      <section className="py-16 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Shop by Category</h2>
-            <p className="text-foreground/60">Explore our carefully curated collection</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {categories.map((cat, i) => (
-              <Link key={i} href={`/shop?category=${cat.value}`}>
-                <div className="p-8 bg-card rounded-lg border border-border hover:border-primary hover:shadow-lg transition-all cursor-pointer group">
-                  <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition mb-2">
-                    {cat.name}
-                  </h3>
-                  <p className="text-muted-foreground">{cat.count} products</p>
-                </div>
-              </Link>
-            ))}
-          </div>
+   <section className="py-16 bg-background">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Heading */}
+        <div className="mb-12">
+          {loading ? (
+            <div className="animate-pulse space-y-3">
+              <div className="h-9 bg-muted rounded w-56" />
+              <div className="h-5 bg-muted rounded w-72" />
+            </div>
+          ) : (
+            <>
+              <h2 className="text-4xl font-bold text-foreground mb-4">Shop by Category</h2>
+              <p className="text-foreground/60">Explore our carefully curated collection</p>
+            </>
+          )}
         </div>
-      </section>
+
+        {/* Mobile: horizontal scroll icon-only row | Desktop: full grid */}
+        <div className="flex gap-3 overflow-x-auto scrollbar-none md:overflow-visible
+          md:grid md:grid-cols-4 md:gap-4">
+          {loading
+            ? Array.from({ length: 4 }, (_, i) => <CategorySkeleton key={i} />)
+            : categories.map((cat, i) => {
+                const Icon = categoryIcons[cat.value];
+                return (
+                  <Link key={i} href={`/shop?category=${cat.value}`} className="shrink-0 md:shrink">
+
+                    {/* Mobile: icon-only pill */}
+                    <div className="md:hidden flex flex-col items-center gap-2">
+                      <div className="w-14 h-14 flex items-center justify-center rounded-2xl bg-primary/10 text-primary active:bg-primary active:text-primary-foreground transition-colors">
+                        {Icon && <Icon size={22} strokeWidth={1.7} />}
+                      </div>
+                      <span className="text-xs text-muted-foreground text-center leading-tight w-14 truncate">
+                        {cat.name}
+                      </span>
+                    </div>
+
+                    {/* Desktop: full card */}
+                    <div className="hidden md:block p-6 bg-card rounded-xl border border-border hover:border-primary hover:shadow-md transition-all cursor-pointer group">
+                      <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                        {Icon && <Icon size={20} strokeWidth={1.7} />}
+                      </div>
+                      <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors mb-1">
+                        {cat.name}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">{cat.count} products</p>
+                    </div>
+
+                  </Link>
+                );
+              })}
+        </div>
+
+      </div>
+    </section>
 
       {/* Featured Products */}
       <section className="py-16 bg-secondary">
